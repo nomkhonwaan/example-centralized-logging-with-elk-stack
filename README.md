@@ -38,7 +38,7 @@ then do the same as master
 
 ```
 client$ cd /path/to/example-centralized-logging-with-elk-stack/slave
-client docker-compose up
+client$ docker-compose up
 ```
 
 if everything worked you will see logs appear on Kibana and dashboard like this

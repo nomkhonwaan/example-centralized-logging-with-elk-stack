@@ -1,0 +1,24 @@
+version: '2'
+services:
+  filebeat:
+    image: nomkhonwaan/filebeat 
+    container_name: filebeat 
+    build: 
+      context: .. 
+      dockerfile: ./slave/filebeat/Dockerfile
+    restart: always
+    volumes:
+      - $PWD/../logs:/opt/stresser/logs
+      - $PWD/filebeat:/opt/filebeat:ro
+    command: -c /opt/filebeat/filebeat.yml
+  client:
+    image: nomkhonwaan/stresser-client:latest
+    container_name: stresser-client
+    build:
+      context: ..
+      dockerfile: ./slave/client/Dockerfile
+    restart: always
+    volumes:
+      - $PWD/../logs:/opt/stresser/logs
+      - $PWD/../config.yml:/opt/stresser/config.yml:ro
+    command: -debug=1 -config-path=/opt/stresser

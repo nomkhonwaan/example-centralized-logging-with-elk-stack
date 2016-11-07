@@ -1,0 +1,6 @@
+filebeat.prospectors:
+- input_type: log
+  paths:
+    - /opt/stresser/logs/*.log
+output.logstash:
+  hosts: ["PUT_YOUR_LOGSTASH_IP_HERE:5044"]

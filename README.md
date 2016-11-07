@@ -23,7 +23,7 @@ after that open browser and goto http://localhost:5601 it will show Kibana
 then goto Management > Saved Objects > Import and choose kibana.json on ./master/kibana this is pre-config of Kibana dashboard and virtualizations objects.
 But there are nothing until you start your client.
 
-**Jot down you master IP, this will required for setup Filebest on client**
+**Jot down your master IP, this will required for setup Filebest on client**
 
 ### Client
 On the client you need to change the Filebeat host IP follow you master IP at ./slave/filebeat/filebeat.yml change 

@@ -44,3 +44,19 @@ client$ docker-compose up
 if everything worked you will see logs appear on Kibana and dashboard like this
 
 ![Kibana Dashboard](https://raw.github.com/nomkhonwaan/example-centralized-logging-with-elk-stack/master/screenshot.png)
+
+## FYI
+To run the master and client alongside in single machine you may need to configure following these.
+In the master start normally, but in the client you need to configure Docker Compose network to join the master network
+
+Add the following these to the bottom of ./client/docker-compose.yml
+
+```
+networks:
+  default:
+    external:
+      name: master_default
+```
+
+then change the `PUT_YOUR_LOGSTASH_IP_HERE` in ./client/filebeat/filebeat.yml to `logstash` 
+this is a default hostname of Logstash server in the master. 

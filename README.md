@@ -41,7 +41,7 @@ client$ cd /path/to/example-centralized-logging-with-elk-stack/slave
 client$ docker-compose up
 ```
 
-if everything worked you will see logs appear on Kibana and dashboard like this
+if everything worked you will see logs appear on Kibana dashboard like this
 
 ![Kibana Dashboard](https://raw.github.com/nomkhonwaan/example-centralized-logging-with-elk-stack/master/screenshot.png)
 
@@ -60,3 +60,7 @@ networks:
 
 then change the `PUT_YOUR_LOGSTASH_IP_HERE` in ./client/filebeat/filebeat.yml to `logstash` 
 this is a default hostname of Logstash server in the master. 
+
+## FYI2
+Please do not try this much it will flood requests to http://httpbin.org/, 
+sorry httpbin.org for case study with your website.

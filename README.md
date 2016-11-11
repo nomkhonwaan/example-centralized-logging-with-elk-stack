@@ -1,55 +1,67 @@
-# Example Centralized Logging with ELK and Filebeat
+# Centralized Logging System wth ELK Stack 
+
+## Table of Contents
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+  - [Master](#master)
+  - [Client](#client)
 
 ## Installation
-To run this prohect you need to install Docker and make sure your `docker` and `docker-compose` already installed.
-Then clone this project via `git` command
+To install this project you need to install Docker and make sure `docker` and `docker-compose` already installed,
+then using `git` to clone this project 
 
 ```
 $ git clone https://github.com/nomkhonwaan/example-centralized-logging-with-elk-stack.git
 ```
 
-## Getting Started
-### Master
-On the master server before going next step you need to verify the firewall rules already allowed
-on ports 5044 (Filebeat) and 5601 (Kibana). Then go to master folder and type following these commands
+then following these steps on master and client 
+
+## Getting Statred
+Normally master and client should stay in the same network but sending logs across public network is fine due to your log info.
+BTW I recommend to secure with SSL/TLS while using public network. 
+
+### Master 
+On the master server should whitelist port 5044 for sending logs via Filebeat and port 5601 as public for Kibana.
+Then go to the master folder and type following commands
 
 ```
 master$ cd /path/to/example-centralized-logging-with-elk-stack/master
-master$ docker-compose up
+master$ docker-compose up 
 ```
 
-At the first time it will build all images are not exists, wait until it run (up to your network)
-after that open browser and goto http://localhost:5601 it will show Kibana 
-then goto Management > Saved Objects > Import and choose kibana.json on ./master/kibana this is pre-config of Kibana dashboard and virtualizations objects.
-But there are nothing until you start your client.
+Once it done it should have 3 services running in the container, BTW you can't see anything in the Kibana
+because the client didn't setup. So move to the client and running it.
 
-**Jot down your master IP, this will required for setup Filebest on client**
-
-### Client
-On the client you need to change the Filebeat host IP follow you master IP at ./slave/filebeat/filebeat.yml change 
-`PUT_YOUR_LOGSTASH_IP_HERE` to your master IP make sure it can be connect by using 
+### Client 
+On the client you need to update `filebeat.yml` on `YOUR_LOGSTASH_IP` to your Logstash IP 
+it should be master IP in the default.
 
 ```
-client$ telnet YOUR_LOGSTASH_IP 5044
+filebeat.prospectors:
+- input_type: log
+  paths:
+    - /opt/stresser/logs/*.log
+output.logstash:
+  hosts: ["YOUR_LOGSTASH_IP:5044"]
 ```
 
-You can change target hosts at `./config.yml`, not supported only `GET` method!
-then do the same as master
+and same as the master type following these commands to bring it up
 
 ```
 client$ cd /path/to/example-centralized-logging-with-elk-stack/slave
 client$ docker-compose up
 ```
 
-if everything worked you will see logs appear on Kibana dashboard like this
+if everything work fine you will see 2 servics are running. Then go back to Kibana
+and setup an "Index Patterns" with the "Time-field name" you need to choose "received-date" and then
+go to Management > Saved Objects > Import and choose `kibana.json` file inside `./master/kibana/kibana.json` 
+this is pre-config for Kibana dashboard and virtualization objects.
 
-![Kibana Dashboard](https://raw.github.com/nomkhonwaan/example-centralized-logging-with-elk-stack/master/screenshot.png)
+![Centralized Logging Dashboard](https://raw.github.com/nomkhonwaan/example-centralized-logging-with-elk-stack/master/screenshot.png)
 
-## FYI
-To run the master and client alongside in single machine you may need to configure following these.
-In the master start normally, but in the client you need to configure Docker Compose network to join the master network
-
-Add the following these to the bottom of ./client/docker-compose.yml
+## FYI 
+To run the client alongside the master you need to add `networks` config like this
+after `services` section in the `docker-compose.yml` file
 
 ```
 networks:
@@ -58,9 +70,8 @@ networks:
       name: master_default
 ```
 
-then change the `PUT_YOUR_LOGSTASH_IP_HERE` in ./client/filebeat/filebeat.yml to `logstash` 
-this is a default hostname of Logstash server in the master. 
+this will let client services attach to the master network (it should named master_default by default) 
+and then you need to config `filebeat.yml` in the `YOUR_LOGSTASH_IP` to use `logstash` name instead.
+The `logstash` name is an local domain name on Docker Compose system, declared in the `docker-compose.yml` file at `container_name` field.
 
-## FYI2
-Please do not try this much it will flood requests to http://httpbin.org/, 
-sorry httpbin.org for case study with your website.
+> For long run testing please change the request targets to your own server instead of http://httpbin.org 

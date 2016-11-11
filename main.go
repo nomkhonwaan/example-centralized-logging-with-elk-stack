@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/nomkhonwaan/stresser/config"
+	"github.com/nomkhonwaan/logger/config"
 	"github.com/spf13/viper"
 )
 
@@ -96,7 +96,7 @@ func call(in target) {
 				"elapsed-m":     elapsed.Minutes(),
 			})
 
-			if config.StresserConfig.Debug {
+			if config.LoggerConfig.Debug {
 				log.Printf("[INFO] calling [%s:%s] at [%s], response in [%.2fs]", in2.Method, in2.URL, start.Format(time.RFC3339), elapsed.Seconds())
 			}
 

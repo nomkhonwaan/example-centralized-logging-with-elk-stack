@@ -5,20 +5,25 @@ services:
     container_name: filebeat 
     build: 
       context: .. 
-      dockerfile: ./slave/filebeat/Dockerfile
+      dockerfile: ./client/filebeat/Dockerfile
     restart: always
     volumes:
-      - $PWD/../logs:/opt/stresser/logs
+      - $PWD/../logs:/opt/logger/logs
       - $PWD/filebeat:/opt/filebeat:ro
     command: -c /opt/filebeat/filebeat.yml
   client:
-    image: nomkhonwaan/stresser-client:latest
-    container_name: stresser-client
+    image: nomkhonwaan/client:latest
+    container_name: client
     build:
       context: ..
-      dockerfile: ./slave/client/Dockerfile
+      dockerfile: ./client/client/Dockerfile
     restart: always
     volumes:
-      - $PWD/../logs:/opt/stresser/logs
-      - $PWD/../config.yml:/opt/stresser/config.yml:ro
-    command: -debug=1 -config-path=/opt/stresser
+      - $PWD/../logs:/opt/logger/logs
+      - $PWD/../config.yml:/opt/logger/config.yml:ro
+    command: -debug=1 -config-path=/opt/logger
+
+networks:
+  default:
+    external:
+      name: master_default

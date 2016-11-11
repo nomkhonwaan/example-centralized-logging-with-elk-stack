@@ -9,6 +9,6 @@ calls_per_second: 20
 output_logs:
   # This is default date/time format pattern in golang,
   # for more information please see also https://golang.org/pkg/time/
-  path: /opt/stresser/logs/stresser-2006-01-02.log
+  path: /opt/logger/logs/logger-2006-01-02.log
   # Required JSON format to be parsed in Logstash and Elasticsearch
   type: JSON

@@ -7,26 +7,26 @@ import (
 	"github.com/spf13/viper"
 )
 
-type StresserConfigType struct {
+type configuration struct {
 	ConfigName string
 	ConfigPath string
 	ConfigType string
 	Debug      bool
 }
 
-var StresserConfig = StresserConfigType{}
+var LoggerConfig = configuration{}
 
 func init() {
-	flag.StringVar(&(StresserConfig.ConfigName), "config-name", "config", "Configuration filename, default is [config]")
-	flag.StringVar(&(StresserConfig.ConfigPath), "config-path", ".", "Configuration path, default is [.]")
-	flag.StringVar(&(StresserConfig.ConfigType), "config-type", "yaml", "Configuration type, default is [yaml]")
-	flag.BoolVar(&(StresserConfig.Debug), "debug", false, "Enable debug mode, default is [0]")
+	flag.StringVar(&(LoggerConfig.ConfigName), "config-name", "config", "Configuration filename, default is [config]")
+	flag.StringVar(&(LoggerConfig.ConfigPath), "config-path", ".", "Configuration path, default is [.]")
+	flag.StringVar(&(LoggerConfig.ConfigType), "config-type", "yaml", "Configuration type, default is [yaml]")
+	flag.BoolVar(&(LoggerConfig.Debug), "debug", false, "Enable debug mode, default is [0]")
 	flag.Parse()
 
-	viper.SetConfigType(StresserConfig.ConfigType)
-	viper.AddConfigPath(StresserConfig.ConfigPath)
-	viper.AddConfigPath("$HOME/.stresser")
-	viper.SetConfigName(StresserConfig.ConfigName)
+	viper.SetConfigType(LoggerConfig.ConfigType)
+	viper.AddConfigPath(LoggerConfig.ConfigPath)
+	viper.AddConfigPath("$HOME/.logger")
+	viper.SetConfigName(LoggerConfig.ConfigName)
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal(err)
